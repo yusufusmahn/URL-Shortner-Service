@@ -1,4 +1,4 @@
-package org.example.URLShortner.dtos.responses;
+package org.URLShortner.dtos.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
