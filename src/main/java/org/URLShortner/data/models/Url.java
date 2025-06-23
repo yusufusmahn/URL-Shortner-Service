@@ -1,4 +1,4 @@
-package org.example.URLShortner.data.models;
+package org.URLShortner.data.models;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
