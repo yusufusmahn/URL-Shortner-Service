@@ -4,6 +4,7 @@ import org.URLShortner.dtos.requests.UserRequest;
 import org.URLShortner.dtos.responses.ApiResponse;
 import org.URLShortner.dtos.responses.TokenResponse;
 import org.URLShortner.dtos.responses.UserResponse;
+import org.URLShortner.exceptions.UrlShortnerServiceException;
 import org.URLShortner.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class AuthController {
         try {
             UserResponse response = userService.register(userRequest);
             return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (UrlShortnerServiceException e) {
             return new ResponseEntity<>(new ApiResponse(e.getMessage(), false), HttpStatus.BAD_REQUEST);
         }
     }
@@ -33,7 +34,7 @@ public class AuthController {
         try {
             String token = userService.authenticate(userRequest);
             return ResponseEntity.ok(new ApiResponse(new TokenResponse(token), true));
-        } catch (Exception e) {
+        } catch (UrlShortnerServiceException e) {
             return new ResponseEntity<>(new ApiResponse(e.getMessage(), false), HttpStatus.UNAUTHORIZED);
         }
     }
