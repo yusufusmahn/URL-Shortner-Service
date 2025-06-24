@@ -6,6 +6,7 @@ import org.URLShortner.dtos.requests.UrlRequest;
 import org.URLShortner.dtos.responses.ApiResponse;
 import org.URLShortner.dtos.responses.OriginalUrlResponse;
 import org.URLShortner.dtos.responses.UrlResponse;
+import org.URLShortner.exceptions.UrlShortnerServiceException;
 import org.URLShortner.services.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UrlController {
         try {
             UrlResponse response = urlService.shortenUrl(urlRequest);
             return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (UrlShortnerServiceException e) {
             return new ResponseEntity<>(new ApiResponse(e.getMessage(), false), HttpStatus.BAD_REQUEST);
         }
     }
@@ -51,7 +52,7 @@ public class UrlController {
         try {
             OriginalUrlResponse response = urlService.getOriginalUrl(originalUrlRequest);
             return ResponseEntity.ok(new ApiResponse(response, true));
-        } catch (Exception e) {
+        } catch (UrlShortnerServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), false));
         }
