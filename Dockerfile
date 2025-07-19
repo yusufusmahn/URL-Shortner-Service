@@ -1,14 +1,12 @@
-# 1. Use an official Java runtime as base image
-FROM eclipse-temurin:21-jdk-alpine
-
-# 2. Set the working directory in the container
+# Stage 1: Build the application
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# 3. Copy the built JAR file into the container
-COPY target/URLShortnerService-1.0-SNAPSHOT.jar app.jar
-
-# 4. Expose the application port
+# Stage 2: Run the application
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+COPY --from=build /app/target/URLShortnerService-1.0-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-# 5. Run the JAR file
 ENTRYPOINT ["java", "-jar", "app.jar"]
