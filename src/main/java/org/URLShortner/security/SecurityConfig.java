@@ -40,13 +40,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/url/original").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/{shortenedUrl:[a-zA-Z0-9]+}").permitAll() // allow dynamic short urls
+                        .requestMatchers("/api/url/shorten").authenticated() // secure this as needed
+                        .requestMatchers("/**").permitAll() // this allows short URL redirects like /gi0IDO
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 
 
 
