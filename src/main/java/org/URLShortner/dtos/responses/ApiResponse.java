@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class ApiResponse {
     private Object data;
     private boolean success;
 
+    public ApiResponse(Object data, boolean success) {
+        this.data = data;
+        this.success = success;
+    }
 }
