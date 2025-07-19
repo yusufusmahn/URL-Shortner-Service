@@ -33,6 +33,36 @@ public class UrlController {
 
 
 
+
+    @PostMapping("/url/original")
+    public ResponseEntity<ApiResponse> getOriginalUrl(@Valid @RequestBody OriginalUrlRequest originalUrlRequest) {
+        try {
+            OriginalUrlResponse response = urlService.getOriginalUrl(originalUrlRequest);
+            return ResponseEntity.ok(new ApiResponse(response, true));
+        } catch (UrlShortnerServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), false));
+        }
+    }
+
+    @GetMapping("/{shortenedUrl}")
+    public ResponseEntity<?> redirectToOriginalUrl(@PathVariable String shortenedUrl) {
+        try {
+            OriginalUrlRequest request = new OriginalUrlRequest();
+            request.setShortenedUrl(shortenedUrl);
+            OriginalUrlResponse response = urlService.getOriginalUrl(request);
+
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header("Location", response.getOriginalUrl())
+                    .build();
+        } catch (UrlShortnerServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
+
+
 //    @GetMapping("/redirect/{shortenedUrl}")
 //    public ResponseEntity<ApiResponse> getOriginalUrl(@PathVariable String shortenedUrl) {
 //        try {
@@ -46,16 +76,5 @@ public class UrlController {
 //        }
 //    }
 
-
-    @PostMapping("/url/original")
-    public ResponseEntity<ApiResponse> getOriginalUrl(@Valid @RequestBody OriginalUrlRequest originalUrlRequest) {
-        try {
-            OriginalUrlResponse response = urlService.getOriginalUrl(originalUrlRequest);
-            return ResponseEntity.ok(new ApiResponse(response, true));
-        } catch (UrlShortnerServiceException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(e.getMessage(), false));
-        }
-    }
 
 }
